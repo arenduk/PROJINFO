@@ -2,6 +2,7 @@ services:
   streamlit:
     build: .
     container_name: streamlit_app
+    restart: unless-stopped
     expose:
       - "8501"
     volumes:

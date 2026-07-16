@@ -67,7 +67,7 @@ def render_navbar():
             [1.2, 1.5, 1.5, 4, 0.8, 2]
         )
 
-        col_logo.markdown("### IcamTrac")
+        col_logo.markdown("### IcamTrack")
 
         if user is not None:
             col1.page_link("pages/1_Emprunt.py", label="Mes emprunts")
