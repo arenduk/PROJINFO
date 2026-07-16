@@ -1,0 +1,3 @@
+arenduk.fr {
+    reverse_proxy streamlit:8501
+}

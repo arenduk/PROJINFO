@@ -2,8 +2,8 @@ services:
   streamlit:
     build: .
     container_name: streamlit_app
-    ports:
-      - "8501:8501"
+    expose:
+      - "8501"
     volumes:
       - ./app:/app          # bind mount -> live reload du code sans rebuild
     environment:
@@ -36,6 +36,21 @@ services:
       interval: 2s
       timeout: 5s
       retries: 5
-
+      
+  caddy:
+    image: caddy:2
+    container_name: caddy_proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"       # requis par Let's Encrypt pour valider le domaine
+      - "443:443"     # trafic HTTPS
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data       # stocke les certificats -> ne pas perdre ce volume
+      - caddy_config:/config
+    depends_on:
+      - streamlit
 volumes:
   mysql_data:
+  caddy_data:
+  caddy_config:
