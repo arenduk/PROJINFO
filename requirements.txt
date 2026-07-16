@@ -1,7 +1,7 @@
 streamlit==1.58.0
-numpy 
+numpy
 pandas
 sqlalchemy
 pymysql
-Authlib
+cryptography
 Authlib>=1.3.2

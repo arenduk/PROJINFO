@@ -1,5 +1,7 @@
 import streamlit as st
 
+from auth import current_user, is_admin, logout
+
 
 def render_navbar():
     st.markdown(
@@ -58,23 +60,30 @@ def render_navbar():
         unsafe_allow_html=True,
     )
 
+    user = current_user()
+
     with st.container(key="topbar"):
-        col_logo, col1, col2, col3, col_spacer, col_notif, col_user, col_toggle = st.columns(
-            [1.2, 1, 1.5, 1, 4, 0.8, 1.4, 2.5]
+        col_logo, col1, col2, col_spacer, col_notif, col_user = st.columns(
+            [1.2, 1.5, 1.5, 4, 0.8, 2]
         )
 
-        col_logo.markdown("### Icam")
-        col1.page_link("test.py", label="Accueil")
-        col2.page_link("pages/1_Tableau_de_bord.py", label="Tableau de bord")
-        col3.page_link("pages/2_Mes_cours.py", label="Mes cours")
+        col_logo.markdown("### IcamTrac")
 
-        with col_notif:
-            with st.popover("🔔"):
-                st.write("Vos notifications etc...")
+        if user is not None:
+            col1.page_link("pages/1_Emprunt.py", label="Mes emprunts")
+            if is_admin(user):
+                col2.page_link("pages/2_Administration.py", label="Administration")
 
-        with col_user:
-            with st.popover("user"):
-                st.write("Profil")
-                st.button("Déconnexion")
+            with col_notif:
+                with st.popover("🔔"):
+                    st.write("Vos notifications...")
 
-        col_toggle.toggle("Mode administrateur")
+            with col_user:
+                with st.popover(f"{user['first_name']} {user['last_name']}"):
+                    st.write(f"Statut : {user['user_status']}")
+                    if st.button("Déconnexion"):
+                        logout()
+                        st.switch_page("app.py")
+        else:
+            with col_user:
+                col_user.page_link("app.py", label="Connexion")

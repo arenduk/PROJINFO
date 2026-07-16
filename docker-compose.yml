@@ -12,10 +12,11 @@ services:
       DB_NAME: ${MYSQL_DATABASE}
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
+      PYTHONFAULTHANDLER: 1
     depends_on:
       mysql:
         condition: service_healthy
-    command: streamlit run test.py --server.port=8501 --server.address=0.0.0.0 --server.fileWatcherType=poll
+    command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0 --server.fileWatcherType=poll
 
   mysql:
     image: mysql:8.0

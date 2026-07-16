@@ -1,3 +1,8 @@
+{
+    email antoinefritsch94@gmail.com
+    acme_ca https://acme.zerossl.com/v2/DV90
+}
+
 arenduk.fr {
     reverse_proxy streamlit:8501
 }
