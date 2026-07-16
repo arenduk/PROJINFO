@@ -1,0 +1,41 @@
+services:
+  streamlit:
+    build: .
+    container_name: streamlit_app
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app:/app          # bind mount -> live reload du code sans rebuild
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: streamlit run test.py --server.port=8501 --server.address=0.0.0.0 --server.fileWatcherType=poll
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql                     # persistance des donnees
+      - ./DB:/docker-entrypoint-initdb.d:ro  # charge ton dump au 1er demarrage
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
