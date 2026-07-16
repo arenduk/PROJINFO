@@ -1,5 +1,9 @@
 import streamlit as st
 import datetime
+from navbar import render_navbar
+
+st.set_page_config(layout="wide")
+render_navbar()
 
 def convert_date(text):
     return datetime.datetime.fromisoformat(text)
@@ -25,7 +29,7 @@ def demande_emprunt(id_user,id_equip,date_retour_prev):
 
 def affichage_tables():
 
-    st.write("Liste des équipements")
+    st.write("Liste des équipements de salope")
     df = conn.query("SELECT * FROM equipment")
     st.dataframe(df)
 
@@ -41,6 +45,8 @@ def add_new_user(vlast_name, vfirst_name, vemail, vuser_status):
     conn.query("INSERT INTO user (last_name, first_name, email, user_status)" \
     "values(vlast_name, vfirst_name, vemail, vuser_status)")
 
+st.title("Accueil")
+
 with st.form("my_form"):
     st.write("Add new user form")
     admin_checkbox = st.checkbox("Admin ?")
@@ -51,7 +57,7 @@ with st.form("my_form"):
     submitted = st.form_submit_button("add emprunt")
     if submitted:
         demande_emprunt(1,2,'2026-08-08')
-        st.write("New user not added you bitch :)")
+        st.write("Emprunt non ajouté")
 
 
 affichage_tables()
