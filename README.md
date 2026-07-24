@@ -1,49 +1,48 @@
 # IcamTrack
 
-Plateforme de réservation et de suivi de matériel pour l'Icam Strasbourg-Europe :
+Plateforme de réservation et de suivi de matériel pour l'Icam :
 demande d'emprunt pour une période donnée, validation par un gestionnaire de
 stock, historique, calendrier personnel, statistiques, notifications, et une
-administration du site (rôles, journal d'activité, paramètres).
+administration du site.
 
 ## Stack
 
-- **Streamlit** (interface) + **MySQL 8** (données), orchestrés via **Docker
-  Compose**, exposés en HTTPS par **Caddy**.
+- **Streamlit** (interface) + **MySQL 8** (données), controllée via **Docker
+  Compose**, le tout publiée en HTTPS par **Caddy**.
 - Authentification : connexion Google (comptes `icam.fr` uniquement), via
   l'authentification native de Streamlit (`st.login`).
 
 ## Démarrage
 
-1. Copier `.env.exemple` en `.env` et renseigner de vrais mots de passe
+1. Renomer `.env.exemple` en `.env` et renseigner de vrais mots de passe
    (+ `BOOTSTRAP_ADMIN_EMAIL`, voir *Premier admin* ci-dessous).
 2. Créer un client OAuth Google (voir *Connexion Google* ci-dessous), copier
    `app/.streamlit/secrets.toml.example` en `app/.streamlit/secrets.toml` et
-   le remplir avec les vraies valeurs. Ce fichier ne doit jamais être commit
-   (déjà dans `.gitignore`).
+   le remplir avec les vraies valeurs.
 3. Lancer :
    ```
    docker compose up --build
    ```
-4. Ouvrir `https://arenduk.fr` (ou `http://localhost:8501` en local) et se
+4. Ouvrir `https://adresseip.fr` (ou `http://localhost:8501` en local) et se
    connecter avec un compte Google `icam.fr`.
 
 ## Connexion Google (obligatoire)
 
 1. Sur [Google Cloud Console](https://console.cloud.google.com/), créer ou
-   choisir un projet, puis **APIs & Services → OAuth consent screen**. Si ce
+   choisir un projet, puis **APIs & Services → OAuth consent screen**. Comme ce
    projet appartient à l'organisation Google Workspace icam.fr, choisir
    **Interne** pour restreindre nativement aux comptes `icam.fr` ; sinon
    choisir **Externe** — le contrôle de domaine est alors fait côté
-   application (déjà en place dans `app/auth.py`, indépendamment de ce
-   réglage).
-2. **Credentials → Create credentials → OAuth client ID**, type **Application
+   application (une vérif est déjà en place dans `app/auth.py`, et elle fonctionne
+   indépendamment de ce réglage).
+3. **Credentials → Create credentials → OAuth client ID**, type **Application
    Web**.
-3. Dans **Authorized redirect URIs**, ajouter exactement
-   `https://arenduk.fr/oauth2callback` (et `http://localhost:8501/oauth2callback`
+4. Dans **Authorized redirect URIs**, ajouter exactement
+   `https://nomdedomaine.fr/oauth2callback` (et `http://localhost:8501/oauth2callback`
    si besoin de tester en local). Ce chemin est imposé par Streamlit, ne pas
    le modifier.
-4. Récupérer le *Client ID* et le *Client secret*, les renseigner dans
-   `app/.streamlit/secrets.toml`. Générer un `cookie_secret` avec :
+5. Récupérer le *Client ID* et le *Client secret*, les renseigner dans
+   `app/.streamlit/secrets.toml`. Générer un `cookie_secret` avec par exemple :
    ```
    python3 -c "import secrets; print(secrets.token_hex(32))"
    ```
@@ -53,37 +52,25 @@ administration du site (rôles, journal d'activité, paramètres).
 À la toute première connexion réussie sur une base vide, le compte devient
 automatiquement administrateur ; toutes les connexions suivantes créent des
 comptes "utilisateur" standards. Comme le site est sur un domaine public,
-renseigne `BOOTSTRAP_ADMIN_EMAIL` dans `.env` avec ta propre adresse `icam.fr`
+il faut renseigner `BOOTSTRAP_ADMIN_EMAIL` dans `.env` avec une  adresse `icam.fr`
+propre a cet utilisation.
 **avant le premier déploiement** : seule cette adresse pourra alors devenir
-admin via ce mécanisme, plutôt que de laisser la course au premier arrivé.
+admin via ce mécanisme, il vaut mieux utiliser ce système pour eviter tout problème.
 
-Une fois connecté en tant qu'admin, promouvoir d'autres utilisateurs
+Une fois connecté en tant qu'admin, on peut promouvoir d'autres utilisateurs
 (gestionnaire de stock / admin) se fait depuis **Administration → Utilisateurs
 & rôles**.
-
-## ⚠️ Important : le schéma a été entièrement réécrit
-
-`DB/Init_SQL.sql` a été refait de zéro (nouvelles tables, nouvelles colonnes,
-nouveaux rôles). Il ne s'exécute que sur un volume MySQL **vide**
-(`docker-entrypoint-initdb.d`). Si l'ancienne version tournait déjà, purger le
-volume existant avant de relancer, sans quoi l'ancien schéma reste en place :
-```
-docker compose down -v
-docker compose up --build
-```
-Cela efface les données de l'ancienne base (utilisateurs/emprunts de test) —
-le catalogue de matériel est reseedé automatiquement.
 
 ## Rôles
 
 - **Utilisateur** : parcourt le matériel disponible, fait des demandes
   d'emprunt pour une période donnée, consulte son historique, son calendrier
   et ses notifications, et peut signaler lui-même le retour d'un emprunt en
-  cours (même avant la date de retour prévue) depuis l'historique.
-- **Gestionnaire de stock** : en plus — valide ou refuse les demandes, marque
+  cours avant la date de retour prévue depuis l'historique.
+- **Gestionnaire de stock** : en plus il valide ou refuse les demandes, marque
   le matériel comme rendu, gère le catalogue (ajout/modification/retrait
   d'équipement).
-- **Administrateur** : en plus — gère les rôles des utilisateurs, consulte le
+- **Administrateur** : en plus il gère les rôles des utilisateurs, consulte le
   journal d'activité, modifie les paramètres du site (nom, contact, bandeau de
   maintenance).
 
@@ -102,7 +89,6 @@ app/
   settings.py             # paramètres du site (clé/valeur)
   .streamlit/
     config.toml            # thème (committé)
-    secrets.toml.example   # gabarit (committé)
     secrets.toml            # réel, jamais commit
   pages/
     1_Accueil.py, 2_Equipements.py, 3_Historique.py, 4_Validation.py,
