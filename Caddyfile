@@ -1,8 +1,8 @@
 {
-    email antoinefritsch94@gmail.com
+    email nomprenom@gmail.com
     acme_ca https://acme.zerossl.com/v2/DV90
 }
 
-arenduk.fr {
+nomdedomaine.fr {
     reverse_proxy streamlit:8501
 }
