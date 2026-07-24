@@ -29,12 +29,6 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    # Pas de "ports:" ici : le conteneur streamlit atteint mysql via le reseau
-    # interne Docker Compose sans qu'il soit besoin d'exposer 3306 sur l'hote
-    # (et donc potentiellement sur internet, l'hote ayant une IP publique
-    # pour Caddy/Let's Encrypt). Pour du debug local ponctuel, ouvre un tunnel
-    # avec `docker compose exec mysql mysql -u appuser -p` plutot que de
-    # rouvrir ce port.
     volumes:
       - mysql_data:/var/lib/mysql                     # persistance des donnees
       - ./DB:/docker-entrypoint-initdb.d:ro  # charge ton dump au 1er demarrage
