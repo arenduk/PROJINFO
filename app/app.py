@@ -1,63 +1,38 @@
 import streamlit as st
 
-from auth import current_user, is_admin, login
-from db import get_connection
-from navbar import render_navbar
+import auth
+import theme
 
-st.set_page_config(page_title="IcamTrac - Connexion", layout="wide")
-render_navbar()
+st.set_page_config(page_title="IcamTrack - Connexion", layout="wide", page_icon="🧰")
 
-st.title("Connexion")
-
-user = current_user()
-if user is not None:
+if st.user.is_logged_in:
+    user = auth.require_login()
+    theme.inject_base_style()
     st.success(f"Vous êtes déjà connecté en tant que {user['first_name']} {user['last_name']}.")
-    if is_admin(user):
-        st.page_link("pages/2_Administration.py", label="Aller à l'administration ➜")
-    st.page_link("pages/1_Emprunt.py", label="Aller à mes emprunts ➜")
+    st.page_link("pages/1_Accueil.py", label="Aller à l'accueil ➜")
     st.stop()
 
-conn = get_connection()
+theme.inject_base_style()
 
-st.info(
-    "La connexion via un compte Google Icam sera disponible prochainement. "
-    "En attendant, sélectionnez votre compte ci-dessous."
-)
+col_visual, col_form = st.columns([1.3, 1], gap="large")
 
-users = conn.query(
-    "SELECT id_user, last_name, first_name, email, user_status FROM user "
-    "ORDER BY last_name, first_name",
-    ttl=60,
-)
-
-if users.empty:
-    st.warning("Aucun utilisateur n'est enregistré dans la base de données.")
-    st.stop()
-
-options = {
-    row.id_user: f"{row.first_name} {row.last_name} ({row.email})"
-    for row in users.itertuples()
-}
-
-with st.form("login_form"):
-    id_user = st.selectbox(
-        "Votre compte",
-        options=list(options.keys()),
-        format_func=lambda uid: options[uid],
+with col_visual:
+    theme.render_hero(
+        "IcamTrack",
+        "La plateforme de réservation et de suivi du matériel de l'Icam Strasbourg-Europe. "
+        "Empruntez du matériel pour vos projets, suivez vos demandes et retrouvez tout "
+        "votre historique au même endroit.",
     )
-    submitted = st.form_submit_button("Se connecter")
-
-st.button("Se connecter avec Google", disabled=True, help="Bientôt disponible")
-
-if submitted:
-    row = users.loc[users["id_user"] == id_user].iloc[0]
-    login(
-        id_user=int(row["id_user"]),
-        first_name=row["first_name"],
-        last_name=row["last_name"],
-        user_status=row["user_status"],
+    st.caption(
+        "Matériel disponible en temps réel · Calendrier de vos emprunts · "
+        "Notifications de validation · Statistiques d'utilisation"
     )
-    if row["user_status"] == "admin":
-        st.switch_page("pages/2_Administration.py")
-    else:
-        st.switch_page("pages/1_Emprunt.py")
+
+with col_form:
+    with st.container(border=True):
+        st.markdown('<div class="icamtrack-logo">Icam<span>Track</span></div>', unsafe_allow_html=True)
+        st.subheader("Bienvenue,")
+        st.write("Connexion avec votre compte Google Icam (**icam.fr**).")
+        if st.button("SE CONNECTER", type="primary", use_container_width=True):
+            st.login()
+        st.caption("Seuls les comptes icam.fr sont autorisés à utiliser IcamTrack.")

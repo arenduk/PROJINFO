@@ -1,0 +1,13 @@
+# Secrets - on ne donne pas les ID a toute le monde les enfants!!!
+.env
+app/.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editeurs
+.vscode/
+.idea/

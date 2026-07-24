@@ -18,5 +18,5 @@ def get_connection():
         port=int(os.environ.get("DB_PORT", "3306")),
         database=os.environ.get("DB_NAME", "SAP_bis"),
         username=os.environ.get("DB_USER", "appuser"),
-        password=os.environ.get("DB_PASSWORD", "FLef289*33"),
+        password=os.environ["DB_PASSWORD"],
     )

@@ -1,7 +1,7 @@
-streamlit==1.58.0
+streamlit[auth]==1.58.0
+httpx
 numpy
-pandas
+pandas<3.0
 sqlalchemy
 pymysql
 cryptography
-Authlib>=1.3.2

@@ -1,0 +1,23 @@
+[theme]
+base = "light"
+primaryColor = "#E8622B"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F2F7F7"
+textColor = "#1A1A1A"
+linkColor = "#0F8B8D"
+font = "sans-serif"
+baseRadius = "1rem"
+buttonRadius = "full"
+showWidgetBorder = true
+# Palette generique de secours pour d'eventuels futurs graphiques multi-series
+# sans couleur explicite (aucune page actuelle n'en depend : les graphiques
+# de Statistiques passent leurs propres couleurs). Reprend l'ordre validé
+# (script du skill dataviz) plutôt que d'inventer des teintes non vérifiées.
+chartCategoricalColors = ["#2a78d6", "#008300", "#e87ba4", "#eda100", "#1baf7a", "#eb6834", "#4a3aa7", "#e34948"]
+chartSequentialColors = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#2a78d6", "#1c5cab", "#0d366b"]
+
+[client]
+showSidebarNavigation = false
+
+[server]
+fileWatcherType = "poll"
