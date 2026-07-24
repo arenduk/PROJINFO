@@ -1,4 +1,4 @@
--- IcamTrack - schema complet (reecrit de zero)
+-- IcamTrack - schema complet
 -- Gestion d'emprunt de materiel : demande -> validation par un gestionnaire -> retour.
 
 CREATE DATABASE IF NOT EXISTS SAP_bis
