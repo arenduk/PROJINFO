@@ -8,7 +8,7 @@ import settings
 from db import get_connection
 from navbar import render_navbar
 
-st.set_page_config(page_title="IcamTrack - Administration", layout="wide", page_icon="🧰")
+st.set_page_config(page_title="IcamTrack - Administration", layout="wide")
 user = auth.require_role("admin")
 render_navbar(user)
 

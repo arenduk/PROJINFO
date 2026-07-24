@@ -7,14 +7,14 @@ import theme
 from db import get_connection
 from navbar import render_navbar
 
-st.set_page_config(page_title="IcamTrack - Accueil", layout="wide", page_icon="🧰")
+st.set_page_config(page_title="IcamTrack - Accueil", layout="wide")
 user = auth.require_login()
 render_navbar(user)
 
 conn = get_connection()
 
 theme.render_hero(
-    f"Bonjour {user['first_name']} 👋",
+    f"Bonjour {user['first_name']}",
     "Retrouvez ici un aperçu de vos emprunts, vos dernières notifications et un accès "
     "rapide aux principales fonctionnalités d'IcamTrack.",
 )

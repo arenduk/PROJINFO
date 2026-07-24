@@ -1,7 +1,4 @@
-"""Direction artistique partagee (palette + CSS), inspiree des sites Icam
-Strasbourg-Europe : orange plein en accent/CTA, sarcelle en secondaire, fond
-blanc, coins tres arrondis. Centralise ici ce qui etait auparavant duplique
-dans le `st.markdown(<style>)` de chaque page.
+"""palette + CSS inspiré des sites Icam
 """
 
 import html
@@ -11,13 +8,6 @@ import streamlit as st
 PRIMARY = "#E8622B"
 SECONDARY = "#0F8B8D"
 
-# Palette de statut validee avec le script du skill dataviz
-# (scripts/validate_palette.js) : cet ordre precis passe les verifications de
-# daltonisme (CVD) et de vision normale pour un usage cote-a-cote (graphique
-# en barres) ; ne pas reordonner sans revalider, valide/refuse ne doivent
-# jamais se retrouver adjacents (rouge/vert). Sur fond clair, en_attente est
-# sous le seuil de contraste 3:1 par design (comme la palette de reference du
-# skill) : toujours accompagne d'un icone/texte, jamais de la couleur seule.
 STATUS_COLORS = {
     "valide": "#0CA30C",
     "annule": "#495698",
@@ -140,17 +130,15 @@ div[data-testid="stMetric"] {
 
 
 def inject_base_style():
-    """Injecte le CSS partage. Sans effet si appele plusieurs fois sur la
-    meme page (juste une regle CSS re-appliquee)."""
+    """Injecte le CSS. Sans effet si appelée plusieurs fois sur la
+    meme page juste une regle CSS re-appliqueé."""
     st.markdown(_STYLE, unsafe_allow_html=True)
 
 
 def render_hero(title: str, subtitle: str = ""):
-    """Bandeau d'accueil arrondi façon page hero du site Icam (utilise
-    uniquement sur la page Accueil, pour ne pas repeter cet effet partout).
-
+    """Bandeau d'accueil arrondi
     title/subtitle sont echappes : title peut contenir le prenom Google de
-    l'utilisateur, qui n'est pas une donnee de confiance."""
+    l'utilisateur"""
     st.markdown(
         f"""
         <div class="icamtrack-hero">
@@ -163,10 +151,10 @@ def render_hero(title: str, subtitle: str = ""):
 
 
 def status_badge(status: str) -> str:
-    """Pastille HTML coloree pour un statut de validation d'emprunt. La
-    couleur de texte est choisie par statut (voir STATUS_TEXT_COLORS) pour
-    rester lisible : un texte blanc sur fond clair (en_attente) tomberait
-    sous le seuil de contraste WCAG."""
+    """Pastille HTML coloree pour le  statut de validation d'emprunt. La
+    couleur du texte est choisie par STATUS_TEXT_COLORS pour
+    rester lisible sur un texte blanc sur fond clair  tomberait sous le seuil de contraste
+    """
     color = STATUS_COLORS.get(status, "#898781")
     text_color = STATUS_TEXT_COLORS.get(status, "#FFFFFF")
     label = STATUS_LABELS.get(status, status)

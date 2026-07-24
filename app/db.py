@@ -7,8 +7,8 @@ import streamlit as st
 
 @st.cache_resource
 def get_connection():
-    """Retourne la connexion SQL partagee, configuree via les variables
-    d'environnement fournies par docker-compose (DB_HOST, DB_PORT, ...)."""
+    """Retourne la connexion SQL, configurée via les variables
+    d'environnement fournies par le docker-compose"""
     return st.connection(
         "sql",
         type="sql",

@@ -9,7 +9,7 @@ import theme
 from db import get_connection
 from navbar import render_navbar
 
-st.set_page_config(page_title="IcamTrack - Calendrier", layout="wide", page_icon="🧰")
+st.set_page_config(page_title="IcamTrack - Calendrier", layout="wide")
 user = auth.require_login()
 render_navbar(user)
 
@@ -29,13 +29,13 @@ st.session_state.setdefault("calendrier_mois", today.month)
 st.session_state.setdefault("calendrier_jour_selectionne", None)
 
 col_prev, col_titre, col_next = st.columns([1, 3, 1])
-if col_prev.button("◀ Mois précédent"):
+if col_prev.button("<- Mois précédent"):
     mois, annee = st.session_state["calendrier_mois"] - 1, st.session_state["calendrier_annee"]
     if mois < 1:
         mois, annee = 12, annee - 1
     st.session_state["calendrier_mois"], st.session_state["calendrier_annee"] = mois, annee
     st.rerun()
-if col_next.button("Mois suivant ▶"):
+if col_next.button("Mois suivant ->"):
     mois, annee = st.session_state["calendrier_mois"] + 1, st.session_state["calendrier_annee"]
     if mois > 12:
         mois, annee = 1, annee + 1

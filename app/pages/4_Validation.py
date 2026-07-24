@@ -18,7 +18,7 @@ def _as_date(value):
     Python refuse de melanger date et datetime dans une soustraction."""
     return value.date() if isinstance(value, datetime.datetime) else value
 
-st.set_page_config(page_title="IcamTrack - Validation", layout="wide", page_icon="🧰")
+st.set_page_config(page_title="IcamTrack - Validation", layout="wide")
 user = auth.require_role("stock_manager")
 render_navbar(user)
 

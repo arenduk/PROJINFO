@@ -1,7 +1,4 @@
-"""Bandeau de navigation : logo, liens filtres par role, cloche de
-notifications, menu utilisateur. Ne fait AUCUNE verification d'auth elle-meme
-— chaque page appelle `auth.require_login()`/`require_role()` avant de
-rendre le bandeau et lui passe l'utilisateur deja valide.
+"""Bandeau de navigation : logo, liens filtres par role, cloche de notifications, menu utilisateur.
 """
 
 import streamlit as st

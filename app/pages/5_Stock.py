@@ -6,7 +6,7 @@ import auth
 from db import get_connection
 from navbar import render_navbar
 
-st.set_page_config(page_title="IcamTrack - Stock", layout="wide", page_icon="🧰")
+st.set_page_config(page_title="IcamTrack - Stock", layout="wide)
 user = auth.require_role("stock_manager")
 render_navbar(user)
 

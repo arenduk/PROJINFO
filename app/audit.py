@@ -1,8 +1,4 @@
 """Journal d'activite (table `journal_audit`).
-
-Chaque fonction ici prend une session SQLAlchemy deja ouverte et n'appelle
-jamais `commit()` elle-meme : l'appelant compose l'ecriture principale + le
-log dans une seule transaction (`with conn.session as s: ... s.commit()`).
 """
 
 from sqlalchemy import text
@@ -10,8 +6,7 @@ from sqlalchemy import text
 
 def log_action(session, id_user, action: str, details: str = ""):
     """Enregistre une action dans le journal d'activite.
-
-    id_user peut etre None (evenement systeme / echec d'authentification).
+    Le id_user peut etre None  (evenement systeme / echec d'authentification).
     """
     session.execute(
         text(
@@ -24,9 +19,7 @@ def log_action(session, id_user, action: str, details: str = ""):
 
 def list_recent(conn, limit: int = 200):
     """Journal recent avec nom/email de l'auteur, pour la page Administration.
-
-    LEFT JOIN : un journal peut referencer un utilisateur supprime, et on
-    veut un affichage propre meme quand la table est encore vide.
+    LEFT JOIN : un journal peut referencer un utilisateur supprime, et on veut un affichage propre meme quand la table est encore vide.
     """
     return conn.query(
         """

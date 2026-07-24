@@ -1,7 +1,5 @@
-"""Parametres du site (table `site_settings`, cle/valeur) : nom du site,
-email de contact, bandeau de maintenance. Utilise par la page Administration
-(edition) et par le bandeau de navigation (affichage du bandeau de maintenance
-sur toutes les pages).
+"""Parametres du site nom du site,email de contact, bandeau de maintenance. 
+utilise par la page Administration (edition) et par le bandeau de navigation (affichage du bandeau de maintenance sur toutes les pages).
 """
 
 from sqlalchemy import text

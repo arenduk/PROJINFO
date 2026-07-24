@@ -1,15 +1,4 @@
 """Authentification (Google OAuth natif de Streamlit) et gestion des roles.
-
-Connexion reelle via `st.login()` / `st.user`, restreinte aux comptes Google
-Workspace icam.fr. Un compte est cree automatiquement en base au premier
-login (voir `_provision_new_user`) : aucune inscription manuelle necessaire.
-
-Point important : `st.login()`/`st.logout()` redirigent toujours vers
-`app.py` dans une session neuve, donc la verification (connecte ? domaine
-autorise ? compte actif ?) ne peut pas etre faite une seule fois sur
-`app.py` — une page de `pages/` reste directement accessible par son URL.
-`require_login()`/`require_role()` doivent donc etre appelees en toute
-premiere ligne de CHAQUE page.
 """
 
 import os
@@ -40,12 +29,7 @@ def _provision_new_user(session, email: str, claims: dict) -> dict:
     """Cree la ligne `user` au tout premier login de cet email.
 
     Bootstrap admin : si la table est totalement vide, la premiere connexion
-    reussie devient admin (ou, si la variable d'environnement
-    BOOTSTRAP_ADMIN_EMAIL est definie, seule cette adresse-la peut le
-    devenir — recommande en production pour ne pas laisser le hasard
-    decider qui administre le site). Un verrou nomme MySQL serialise les
-    provisionnements concurrents pour eviter que deux premieres connexions
-    simultanees ne deviennent toutes les deux admin.
+    reussie devient admin (ou, si la variable d'environnement BOOTSTRAP_ADMIN_EMAIL est definie)
     """
     session.execute(text("SELECT GET_LOCK('icamtrack_provision', 10)"))
     try:
@@ -92,8 +76,7 @@ def _fetch_or_provision(email: str, claims: dict) -> dict:
 
 
 def require_login() -> dict:
-    """A appeler en premiere ligne de chaque page. Bloque le rendu tant que
-    l'utilisateur n'est pas connecte avec un compte icam.fr actif."""
+    """A appeler en premiere ligne de chaque page. Bloque le rendu tant que l'utilisateur n'est pas connecte avec un compte icam.fr actif"""
     if not st.user.is_logged_in:
         st.login()
         st.stop()
@@ -118,8 +101,7 @@ def require_login() -> dict:
 
 
 def require_role(min_role: str) -> dict:
-    """require_login() + verification hierarchique (user < stock_manager <
-    admin, un role superieur herite des droits des roles inferieurs)."""
+    """require_login() + verification hierarchique (user < stock_manager < admin, un role superieur herite des droits des roles inferieurs)"""
     user = require_login()
     if not has_role(user, min_role):
         st.error("Vous n'avez pas les droits necessaires pour acceder a cette page.")
@@ -128,8 +110,7 @@ def require_role(min_role: str) -> dict:
 
 
 def has_role(user: dict | None, min_role: str) -> bool:
-    """Verification non bloquante, pour un affichage conditionnel (ex. liens
-    du bandeau, boutons d'action)."""
+    """Verification pour un affichage conditionnel (ex. liens du bandeau, boutons d'action)."""
     if user is None:
         return False
     return ROLE_RANK.get(user["role"], -1) >= ROLE_RANK.get(min_role, 99)

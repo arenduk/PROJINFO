@@ -1,10 +1,4 @@
-"""Notifications utilisateur (cloche du bandeau).
-
-`notify*` prennent une session deja ouverte et ne commitent pas : elles sont
-destinees a etre composees avec l'action metier qui les declenche (demande,
-validation, changement de role...) dans une seule transaction. `list_*`,
-`count_unread` et `mark_*` sont des operations autonomes (lecture, ou petite
-ecriture qui ne dependant d'aucune autre action) et gerent leur propre session.
+"""Notifications utilisateur (c'est la cloche du bandeau).
 """
 
 from sqlalchemy import text

@@ -6,7 +6,7 @@ import theme
 from db import get_connection
 from navbar import render_navbar
 
-st.set_page_config(page_title="IcamTrack - Statistiques", layout="wide", page_icon="🧰")
+st.set_page_config(page_title="IcamTrack - Statistiques", layout="wide")
 user = auth.require_login()
 render_navbar(user)
 

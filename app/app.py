@@ -3,7 +3,7 @@ import streamlit as st
 import auth
 import theme
 
-st.set_page_config(page_title="IcamTrack - Connexion", layout="wide", page_icon="🧰")
+st.set_page_config(page_title="IcamTrack - Connexion", layout="wide")
 
 if st.user.is_logged_in:
     user = auth.require_login()
