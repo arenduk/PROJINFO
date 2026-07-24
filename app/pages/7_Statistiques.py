@@ -112,7 +112,7 @@ if auth.has_role(user, "stock_manager"):
         ttl=30,
     )
     if retards.empty:
-        st.caption("Aucun emprunt en retard. 🎉")
+        st.caption("Aucun emprunt en retard. YOUHOU!!!!!!")
     else:
         st.dataframe(
             retards.rename(
